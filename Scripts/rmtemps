@@ -1,0 +1,72 @@
+#!/bin/bash
+# 
+#set -x
+# 
+# Purpose is to delete the backup files *~ ou .*~ default is in the current directory
+# or in the one given as an argument
+# One great improvement is that this script now handles filename with white space inside.
+
+PGM=`basename $0`
+true=1
+usage="usage : $PGM [-v(erboses)] [-r(ecursive)] [-n(ot really)] [path]"
+
+E_MAUVAISARGS=65
+TMPFILE=/tmp/$PGM.$$
+
+trap "/bin/rm -f $TMPFILE" 0 1 15
+
+# local declare opts o_quiet o_verbose o_recursive o_notreally path
+minargs=0
+
+opts="qvrn"
+while getopts "$opts" opt ; do
+	case $opt in
+		q)    o_quiet=$true                  	            ;;
+		v)    o_verbose=$true 					               ;;
+		r)    o_recursive=$true                            ;;
+		n)		o_notreally=$true										;;
+		*)    echo "$usage" ; exit $E_MAUVAISARGS				;;
+	esac
+	[[ -n "$OPTARG" ]] && options="${options/ -$opt $OPTARG/} -$opt $OPTARG" || options="${options/ -$opt/} -$opt"
+done
+shift $((OPTIND-1))
+(($#<minArgs)) && { echo $PGM "at least $minArgs argument(s) must be given - $usage" ; exit 67 ; }
+
+## Affichage à l'écran
+MSG (){
+	   (($o_verbose)) && echo -e "] ""$*"
+}
+
+ASK() {
+	echo -e "$@" '[y/N] ? \c'
+	read ans
+	case "$ans" in
+		o*|O*|y*|Y*) return 0 ;;
+		*) return 1 ;;
+	esac
+}
+
+# Default is current directory
+path="${1:-$PWD}"
+path="${path%/}"
+
+(($o_recursive)) && { find "$path"/ -name "*~" -o -name ".*~" >$TMPFILE 2>/dev/null ; } || { find "$path"/*~ "$path"/.*~ >$TMPFILE 2>/dev/null ; }
+
+if [[ -s "$TMPFILE" ]] ; then
+	MSG "Files to be deleted : \n$(cat $TMPFILE)"
+	(($o_notreally)) && { MSG "Not reallly deleting \n$(cat $TMPFILE)" ; exit 0 ; } 
+	
+	if ASK "] Delete file(s)";then 
+		cat $TMPFILE | while read LINE
+		do
+			SPACEPROTECTED=$(echo "$LINE" |sed -e "s| |\ |g" )
+			rm "$SPACEPROTECTED"
+		done
+	else 
+		MSG "Not doin' anything" 
+	fi 
+else
+	MSG "No file to be deleted"
+fi
+
+exit 0

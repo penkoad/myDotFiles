@@ -1,0 +1,8 @@
+#!/bin/bash
+[[ -z "$OS_TYPE" ]] && OS_TYPE="$([[ "$(uname)" == "Linux" ]] && echo "lnx")"
+if [[ "$OS_TYPE" == "lnx" ]] ; then
+        netstat -an --program | awk '{line=toupper($0); if (line ~ /LISTEN/ && line ~ /TCP/) { print; }}'
+else
+        netstat -an | awk '{line=toupper($0); if (line ~ /LISTEN/ && line ~ /TCP/) { print; }}'
+fi
+
