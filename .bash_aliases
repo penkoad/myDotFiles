@@ -82,7 +82,8 @@ c(){ printf "\33[2J" ;}
 alias lso="sudo lsof -i -T -n"
 alias tailf="tail -f --retry"
 alias shot="convert X: ~/Bureau/shot.png"
-alias ducks="du -cks * |sort -rn |head -11"
+#alias ducks="du -cks * |sort -rn |head -11"
+alias ducks="du -h --time --max-depth=1 | sort -hr | head -n11"
 alias duse="du -hs * | sort -hr"
 
 alias mx1="ssh -p 2672 penkoad@mx1.gautrin.fr"
