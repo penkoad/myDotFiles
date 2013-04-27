@@ -1,0 +1,9 @@
+let g:netrw_dirhistmax  =10
+let g:netrw_dirhist_cnt =7
+let g:netrw_dirhist_1='/home/penkoad/.config/synapse'
+let g:netrw_dirhist_2='/home/penkoad/.config'
+let g:netrw_dirhist_3='/home/penkoad/.config/synapse'
+let g:netrw_dirhist_4='/etc/apache2/sites-available'
+let g:netrw_dirhist_5='/home/penkoad/.notes/Helpers'
+let g:netrw_dirhist_6='/home/penkoad/.vim/bundle/vim-pad'
+let g:netrw_dirhist_7='/home/penkoad/SparkleShare'
