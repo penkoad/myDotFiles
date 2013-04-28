@@ -4,18 +4,18 @@ echo "chargement des alias"
 # The 'ls' family (this assumes you use the GNU ls)
 alias ll='ls -lh'
 alias l='ls -CF'
-alias lA='ls -Al'               # show hidden files
+alias lA='ls -Al'             # show hidden files
 alias la="ls -a -I '[!.]*'"		# show ONLY hidden files
-alias lla="ls -Al"				# show hidden files among others the long way
-alias ls='ls -hF --color'	# add colors for filetype recognition
-alias lx='ls -lXB'              # sort by extension
-alias lk='ls -lSh'              # sort by size
-alias lc='ls -lcr'		# sort by change time
-alias lu='ls -lur'		# sort by access time
-alias lr='ls -lR'               # recursive ls
-alias lt='ls -ltr'              # sort by date
-alias lm='ls -al |more'         # pipe through 'more'
-alias tree='tree -Csu'		# nice alternative to 'ls'
+alias lla="ls -Al"				    # show hidden files among others the long way
+alias ls='ls -hF --color'	    # add colors for filetype recognition
+alias lx='ls -lXB'            # sort by extension
+alias lk='ls -lSh'            # sort by size
+alias lc='ls -lcr'		        # sort by change time
+alias lu='ls -lur'		        # sort by access time
+alias lr='ls -lR'             # recursive ls
+alias lt='ls -ltr'            # sort by date
+alias lm='ls -al |more'       # pipe through 'more'
+alias tree='tree -Csu'		    # nice alternative to 'ls'
 alias grep='grep --color'
 
 alias dirs='find .??* * -prune -type d -print 2>/dev/null'
@@ -82,11 +82,8 @@ c(){ printf "\33[2J" ;}
 alias lso="sudo lsof -i -T -n"
 alias tailf="tail -f --retry"
 alias shot="convert X: ~/Bureau/shot.png"
-#alias ducks="du -cks * |sort -rn |head -11"
 alias ducks="du -h --time --max-depth=1 | sort -hr | head -n11"
 alias duse="du -hs * | sort -hr"
-
-alias mx1="ssh -p 2672 penkoad@mx1.gautrin.fr"
 
 # functions
 cx(){ chmod u+x $* ;}
@@ -139,10 +136,3 @@ shopt -s cdspell
 # Leave it on last line
 HOSTNAME=$(hostname -s)
 [[ -f ~/.bash_aliases.${HOSTNAME} ]] && source ~/.bash_aliases.${HOSTNAME}
-
-cmdlinefu() {
-  echo -e "`curl -sL http://www.commandlinefu.com/commands/random/json|sed -re 's/.*,"command":"(.*)","summary":"([^"]+).*/\\x1b[1;32m\2\\n\\n\\x1b[1;33m\1\\x1b[0m/g'`\n"
-}
-
-export MOZILLA_FIVE_HOME=/usr/lib/xulrunner-1.9.2.28
-

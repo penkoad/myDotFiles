@@ -2,69 +2,16 @@
 echo $(hostname -s)" specific aliases"
 
 # Box specifics quicken moves around fs
-alias dl="cd /download"
-alias web='cd /data/workspacesLXPHP'
-
-# Specifics OLA DEVELOPPEMENT
-alias deploy="cd /opt/jboss/server/default/deploy"
-alias jboss="cd /opt/jboss"
-alias logs='cd /var/log/ola'
-alias loga="tail -f /var/log/ola/agence/ola-agence.log"
-alias sql="cd /data/workspacesEuropa/tools/sql"
+alias asa='cd /etc/apache2/site-available'
+alias web='cd /data/workspacesAptana3'
 
 # SSH Turbo connection
-alias home='ssh penkoad@penkoad.dnsalias.com'
-alias cdv='ssh u39001717@carnets-de-voyages.fr'
-alias dedibox="ssh olaadmin@SD-10516.dedibox.fr"
-alias media="ssh olaadmin@sd-8161.dedibox.fr"
-
 alias myssh='LD_PRELOAD="/usr/lib/libtsocks.so" ssh'
 alias myscp='LD_PRELOAD="/usr/lib/libtsocks.so" scp'
 
 # Hyper specifique
 alias quotes='fortune /usr/share/games/fortunes/danstonchat'  # depend de ~/Scripts/fortune_bashfr.sh
 alias lars='clear; figlet pOwned; figlet \( X \) && spd-say "larsinay swapagay steplay"'             # Lars special
-
-go(){
-   case $1 in
-      ag)   cd /opt/jboss/server/agence/deploy     ;;
-      bo)   cd /opt/jboss/server/default/deploy    ;;
-      *) echo "usage: go [ ag | bo ]"               ;;
-   esac
-}
-
-gologs() {
-  case $1 in
-    ag) cd /var/log/ola/agence          ;;
-    bo) cd /var/log/ola/backoffice      ;;
-    *) echo "usage: logs [ ag | bo ]"   ;;
-  esac
-}
-
-startbo() {
-  unset DISPLAY;
-  sudo /etc/init.d/backoffice start
-  if ask "Voir les logs demarrage ? "
-    then tail -f /var/log/ola/backoffice/stdout
-  fi
-}
-
-stopbo() {
-  sudo /etc/init.d/backoffice stop
-}
-
-#alias startag="sudo -u jboss /opt/jboss/bin/run_agence.sh -c agence"
-
-startag(){
-        sudo /etc/init.d/agence start
-        if ask "Voir les logs demarrage ? "
-                then tail -f /var/log/ola/agence/stdout
-        fi
-}
-
-stopag() {
-        sudo /etc/init.d/agence stop
-}
 
 #export JRE_LIB=/usr/lib/j2re1.5-sun/lib
 export JAVA_HOME=/usr/lib/jvm/java-6-sun
@@ -80,3 +27,8 @@ rip() {
 # export PATH=$PATH:/opt/e17/bin
 #fi
 
+cmdlinefu() {
+  echo -e "`curl -sL http://www.commandlinefu.com/commands/random/json|sed -re 's/.*,"command":"(.*)","summary":"([^"]+).*/\\x1b[1;32m\2\\n\\n\\x1b[1;33m\1\\x1b[0m/g'`\n"
+}
+
+export MOZILLA_FIVE_HOME=/usr/lib/xulrunner-1.9.2.28
