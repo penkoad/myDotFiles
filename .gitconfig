@@ -1,3 +1,5 @@
+[push]
+  default = matching
 [user]
 	name = penkoad
 	email = penkoad@yahoo.fr
