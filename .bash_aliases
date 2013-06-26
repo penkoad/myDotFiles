@@ -4,18 +4,18 @@ echo "chargement des alias"
 # The 'ls' family (this assumes you use the GNU ls)
 alias ll='ls -lh'
 alias l='ls -CF'
-alias lA='ls -Al'             # show hidden files
-alias la="ls -a -I '[!.]*'"		# show ONLY hidden files
-alias lla="ls -Al"				    # show hidden files among others the long way
-alias ls='ls -hF --color'	    # add colors for filetype recognition
-alias lx='ls -lXB'            # sort by extension
-alias lk='ls -lSh'            # sort by size
-alias lc='ls -lcr'		        # sort by change time
-alias lu='ls -lur'		        # sort by access time
-alias lr='ls -lR'             # recursive ls
-alias lt='ls -ltr'            # sort by date
-alias lm='ls -al |more'       # pipe through 'more'
-alias tree='tree -Csu'		    # nice alternative to 'ls'
+alias lA='ls -Al'               # show hidden files
+alias la="ls -a -I '[!.]*'"		  # show ONLY hidden files
+alias lla="ls -Al"				      # show hidden files among others the long way
+alias ls='ls -hF --color'	      # add colors for filetype recognition
+alias lx='ls -lXB'              # sort by extension
+alias lk='ls -lSh'              # sort by size
+alias lc='ls -lcr'		          # sort by change time
+alias lu='ls -lur'		          # sort by access time
+alias lr='ls -lR'               # recursive ls
+alias lt='ls -ltr'              # sort by date
+alias lm='ls -al |more'         # pipe through 'more'
+alias tree='tree -Csu'	      	# nice alternative to 'ls'
 alias grep='grep --color'
 
 alias dirs='find .??* * -prune -type d -print 2>/dev/null'
@@ -53,23 +53,35 @@ elif [[ -f /etc/arch_version ]];then
   #
   alias acs='pacman -Ss'
   alias agu='pacman -U'
-  alias agg='pacman -Syu' # Met à jour tous les paquets si une version plus récente est présente dans les dépôts.
+  alias agg='pacman -Syu'   # Met à jour tous les paquets si une version plus récente est présente dans les dépôts.
   alias agd='this is Arch, don\t know what to do...'
   alias agi='pacman -S'
   alias agr='pacman -R'
-  alias agrr'pacman -Rs' # Supprime le(s) paquet(s) spécifié(s) en argument ainsi que toutes ses dépendances qui ne sont pas nécessaires à d'autres paquets.
-  alias agc='pacman -Sc' # Supprime tous les paquets non installés du cache.
-  alias agac='pacman -Scc' # Clean the entire package cache
+  alias agrr'pacman -Rs'    # Supprime le(s) paquet(s) spécifié(s) en argument ainsi que toutes ses dépendances qui ne sont pas nécessaires à d'autres paquets.
+  alias agc='pacman -Sc'    # Supprime tous les paquets non installés du cache.
+  alias agac='pacman -Scc'  # Clean the entire package cache
 
+elif [[ -f /etc/redhat-release ]];then
+  alias acs='yum search'
+  alias agu='yum check-update'
+  alias agg='yum update'
+  alias agd='yum upgrade'
+  alias agi='yum install'
+  alias agr='yum erase'
+  alias agc='yum clean'
+  alias agac='yum clean all'
 fi
 
 # Misc
+alias sa="cd /etc/apache2/sites-available"
+alias wlog="cd /var/log/apache2"
 alias cls="clear"
 alias psx="ps -aux"
 alias cd..='cd ..'
 alias rezo='sudo watch netstat -alpe --ip'
+# public
 alias monip="curl ip.appspot.com"
-#alias ips="ifconfig -a | perl -nle'/(\d+\.\d+\.\d+\.\d+)/ && print $1'"
+# private
 alias ips="ifconfig -a | perl -nle'/(\d+\.\d+\.\d+\.\d+)/ && print $1'"
 alias :wq='echo Je ne suis PAS vim'
 # -> Prevents accidentally clobbering files.
@@ -82,7 +94,8 @@ c(){ printf "\33[2J" ;}
 alias lso="sudo lsof -i -T -n"
 alias tailf="tail -f --retry"
 alias shot="convert X: ~/Bureau/shot.png"
-alias ducks="du -h --time --max-depth=1 | sort -hr | head -n11"
+#alias ducks="du -cks * |sort -rn |head -11"
+alias ducks="du -h * |sort -hr |head -11"
 alias duse="du -hs * | sort -hr"
 
 # functions
@@ -95,7 +108,38 @@ ask() {
         o*|O*) return 0 ;;
         *) return 1 ;;
     esac
- }
+}
+
+mydumpdb ()
+{
+  local usage opts opt o_verbose o_zip o_preserve
+  local -i OPTIND=1
+  true=1
+  usage="usage: mydumpdb [-v(erbose)] [-z(ip)] [-p(reserve)] <database_name>\nYou will be prompted to provide db root pass"
+    minArgs=2
+    opts="vzp"
+    while getopts "$opts" opt ; do
+        case "$opt" in
+            v)  o_verbose=$true                 ;;
+            z)  o_zip=$true                   ;;
+            p)  o_preserve=$true                ;;
+            *)  echo -e "$usage" ; return $65   ;;
+         esac
+        [[ -n "$OPTARG" ]] && options="${options/ -$opt $OPTARG/} -$opt $OPTARG" || options="${options/ -$opt/} -$opt"
+    done
+    shift $((OPTIND-1))
+
+    [[ -n "$1" ]] || { echo -e $usage; return 1; }
+    fullOptions="--quote-names --quick --add-drop-table --add-locks --extended-insert --lock-tables"
+    DUMPFILE="${1}.sql"
+    # Add informations
+    (( o_verbose )) && fullOptions=$fullOptions" --debug-info"
+    # if preserve is set add timestamp to prevent overwrite.
+    (( o_preserve )) && DUMPFILE=${DUMPFILE%.*}-$(date +"%Y%m%d.%H%M%S").sql
+    mysqldump -uroot -p $fullOptions $1 > $DUMPFILE
+    # May gain space if bzip2 is installed
+    (( o_zip )) && bzip2 $DUMPFILE
+}
 
 # $GROUP=$(id -gn)
 if [[ $UID == 0 ]];then
@@ -110,7 +154,7 @@ export PATH=${HOME}/bin:$PATH
 export PATH=/sbin:$PATH
 set -o vi
 
-if [ "$TERM" == "terminator" ]
+if [ "$TERM" == "xterm" ]
 then
   # window-title stuff here.
   setWindowTitle() {
@@ -125,11 +169,11 @@ then
 fi
 
 
-#remove duplicates from the history
+# Remove duplicates from the history
 export HISTCONTROL=erasedups
 #increase history size
 export HISTSIZE=10000
-#ensures that when you exit a shell, the history from that session is appended to ~/.bash_history
+# Ensures that when you exit a shell, the history from that session is appended to ~/.bash_history
 shopt -s histappend
 # Automatic correction of directory typo
 shopt -s cdspell
