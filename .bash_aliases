@@ -143,13 +143,46 @@ mydumpdb ()
     (( o_zip )) && bzip2 $DUMPFILE
 }
 
+# Reset
+Color_Off="\[\033[0m\]"       # Text Reset
+# Regular Colors
+Black="\[\033[0;30m\]"        # Black
+Red="\[\033[0;31m\]"          # Red
+Green="\[\033[0;32m\]"        # Green
+Yellow="\[\033[0;33m\]"       # Yellow
+Blue="\[\033[0;34m\]"         # Blue
+Purple="\[\033[0;35m\]"       # Purple
+Cyan="\[\033[0;36m\]"         # Cyan
+White="\[\033[0;37m\]"        # White
+
+IRed="\[\033[0;91m\]"         # Red
+
+BYellow="\[\033[1;33m\]"      # Yellow
+
+PathShort="\w"
+
+
 # $GROUP=$(id -gn)
 if [[ $UID == 0 ]];then
   export PS1="\[\e[34m\][\$(date +%Y-%m-%d.)\t]\[\e[31m\]\u\[\e[34m\]@\[\e[35m\]\h\[\e[34m\] \[\e[33m\]\w\[\e[0m\]\n# "
 else
   # Nota : le \ devant le $ de date permet à la commande d'être exécuté à chaque fois et pas seulement au démarrage du shell
   # ce qui aurait pour effet de bloquer l'heure sur la création du shell
-  export PS1="\[\e[34m\]\$(date +[%Y-%m-%d.%H:%M:%S])\[\e[32m\]\u\[\e[34m\]@\[\e[35m\]\h\[\e[34m\] \[\e[33m\]\w\[\e[0m\]\n\$ "
+  #export PS1="\[\e[34m\]\$(date +[%Y-%m-%d.%H:%M:%S])\[\e[32m\]\u\[\e[34m\]@\[\e[35m\]\h\[\e[34m\] \[\e[33m\] '$(git branch &>/dev/null;\
+export PS1="${Blue}`date +[%Y-%m-%d.%H:%M:%S]` ${Green}\u${Color_Off}${Blue}@${Color_Off}${Purple}\h${Color_Off}"'$(git branch &>/dev/null;\
+if [ $? -eq 0 ]; then \
+  echo "$(echo `git status` | grep "nothing to commit" > /dev/null 2>&1; \
+  if [ "$?" -eq "0" ]; then \
+    # @4 - Clean repository - nothing to commit
+    echo "'$Green'"$(__git_ps1 " (%s)"); \
+  else \
+    # @5 - Changes to working tree
+    echo "'$IRed'"$(__git_ps1 " {%s}"); \
+  fi) '$BYellow$PathShort$Color_Off'\n\$ "; \
+else \
+  # @2 - Prompt when not in GIT repo
+  echo " '$Yellow$PathShort$Color_Off'\n\$ "; \
+fi)'
 fi
 
 export PATH=${HOME}/bin:$PATH
