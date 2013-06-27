@@ -163,6 +163,8 @@ PathShort="\w"
 
 
 # $GROUP=$(id -gn)
+
+# If you're root let's not have a git hack
 if [[ $UID == 0 ]];then
   export PS1="\[\e[34m\][\$(date +%Y-%m-%d.)\t]\[\e[31m\]\u\[\e[34m\]@\[\e[35m\]\h\[\e[34m\] \[\e[33m\]\w\[\e[0m\]\n# "
 else
