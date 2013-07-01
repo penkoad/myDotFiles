@@ -163,15 +163,13 @@ PathShort="\w"
 
 
 # $GROUP=$(id -gn)
-
-# If you're root let's not have a git hack
 if [[ $UID == 0 ]];then
   export PS1="\[\e[34m\][\$(date +%Y-%m-%d.)\t]\[\e[31m\]\u\[\e[34m\]@\[\e[35m\]\h\[\e[34m\] \[\e[33m\]\w\[\e[0m\]\n# "
 else
   # Nota : le \ devant le $ de date permet à la commande d'être exécuté à chaque fois et pas seulement au démarrage du shell
   # ce qui aurait pour effet de bloquer l'heure sur la création du shell
   #export PS1="\[\e[34m\]\$(date +[%Y-%m-%d.%H:%M:%S])\[\e[32m\]\u\[\e[34m\]@\[\e[35m\]\h\[\e[34m\] \[\e[33m\] '$(git branch &>/dev/null;\
-export PS1="${Blue}`date +[%Y-%m-%d.%H:%M:%S]` ${Green}\u${Color_Off}${Blue}@${Color_Off}${Purple}\h${Color_Off}"'$(git branch &>/dev/null;\
+export PS1="${Blue}\$(date +[%Y-%m-%d.%H:%M:%S]) ${Green}\u${Color_Off}${Blue}@${Color_Off}${Purple}\h${Color_Off}"'$(git branch &>/dev/null;\
 if [ $? -eq 0 ]; then \
   echo "$(echo `git status` | grep "nothing to commit" > /dev/null 2>&1; \
   if [ "$?" -eq "0" ]; then \
