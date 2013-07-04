@@ -94,7 +94,7 @@ c(){ printf "\33[2J" ;}
 alias lso="sudo lsof -i -T -n"
 alias tailf="tail -f --retry"
 alias shot="convert X: ~/Bureau/shot.png"
-alias ducks="du -h * |sort -hr |head -11"
+alias ducks="du -h * |sort -hr |head -n11"
 alias duse="du -hs * | sort -hr"
 
 alias head='head -n $((${LINES:-12}-2))'      # As many as possible without scrolling
